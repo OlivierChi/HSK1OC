@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Chinois HSK1 - Leçon 11</title>
+    <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
+    <style>
+        /* Base Styles */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; flex-direction: column; align-items: center; padding: 20px; color: #2c3e50; transition: all 0.3s ease; }
+        
+        /* Container App Mode Control */
+        #app-container { width: 400px; background: #fff; border-radius: 30px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 8px solid #333; transition: all 0.3s ease; }
+        #app-container.pc-mode { width: 95%; max-width: 1200px; border-radius: 15px; border: none; box-shadow: none; background: transparent; }
+
+        .mode-toggle { margin-bottom: 15px; }
+
+        /* Tabs & Buttons */
+        .tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px; }
+        .tab-btn { padding: 10px 18px; cursor: pointer; border: none; background: #bdc3c7; border-radius: 20px; font-weight: bold; transition: 0.3s; }
+        .tab-btn.active { background: #3498db; color: white; }
+        .tab-btn.dialogue-btn { background: #95a5a6; color: white; }
+        .tab-btn.dialogue-btn.active { background: #27ae60; }
+        .tab-btn.guide-btn { background: #7f8c8d; color: white; }
+        .tab-btn.guide-btn.active { background: #2c3e50; }
+
+        /* Content Sections */
+        .content-section { display: none; width: 100%; }
+        .content-section.active { display: block; }
+
+        .card, .dialogue-box, .write-box, .guide-box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
+        
+        /* Writing Styles */
+        .char-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; background: #f9f9f9; padding: 15px; border-radius: 10px; border: 1px solid #eee; }
+        .char-tile { padding: 8px 12px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid #ddd; border-radius: 5px; font-size: 1.1rem; cursor: pointer; transition: 0.2s; }
+        .char-tile:hover { background: #e67e22; color: white; border-color: #e67e22; }
+        
+        #write-pinyin-display { font-size: 1.5rem; color: #e67e22; font-weight: bold; margin-bottom: 5px; min-height: 1.8rem; }
+        #target-kanji { margin: 0 auto 10px auto; background: #fff; border: 2px solid #3498db; display: inline-block; border-radius: 10px; }
+        .write-nav-btns { margin-top: 10px; display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
+        .search-area { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: center; gap: 5px; }
+        
+        /* Dialogue Styles */
+        .cn-text { font-size: 1.6rem; color: #2c3e50; cursor: pointer; position: relative; }
+        .cn-text::after { content: attr(data-tooltip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background-color: #2c3e50; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; white-space: pre-wrap; width: max-content; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 100; }
+        .cn-text:hover::after { opacity: 1; visibility: visible; }
+
+        .hidden { display: none !important; }
+        .action-btn { padding: 8px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; margin: 2px; }
+        
+        /* Guide Styles */
+        .guide-content { text-align: left; line-height: 1.6; font-size: 0.95rem; }
+        .guide-content h3 { color: #3498db; border-bottom: 2px solid #3498db; padding-bottom: 5px; margin-top: 25px; }
+        .hl { font-weight: bold; color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+    <div class="mode-toggle">
+        <button class="action-btn" style="background:#34495e" onclick="toggleMode()">📱 / 💻 Basculer Smartphone/PC</button>
+    </div>
+
+    <div id="app-container">
+        <div class="tabs">
+            <button id="btn-vocab" class="tab-btn active" onclick="showTab('vocab')">🔤 Vocabulaire</button>
+            <button id="btn-diag1" class="tab-btn dialogue-btn" onclick="showTab('diag1')">💬 Diag 1</button>
+            <button id="btn-diag2" class="tab-btn dialogue-btn" onclick="showTab('diag2')">💬 Diag 2</button>
+            <button id="btn-diag3" class="tab-btn dialogue-btn" onclick="showTab('diag3')">💬 Diag 3</button>
+            <button id="btn-write" class="tab-btn" style="background:#e67e22; color:white" onclick="showTab('write')">✍️ Écriture</button>
+            <button id="btn-guide" class="tab-btn guide-btn" onclick="showTab('guide')">📖 Guide</button>
+        </div>
+
+        <div id="vocab" class="content-section active">
+            <div class="card">
+                <span id="vocab-cn" style="font-size:4rem; cursor:pointer" onclick="speakText(this.innerText)">--</span>
+                <div onclick="reveal('vocab-py', 'vocab-py-reveal')" style="cursor:pointer; margin-top:15px;"><span id="vocab-py-reveal" style="color:#3498db">Voir Pinyin</span><span id="vocab-py" class="hidden" style="font-size:1.8rem; color:#e67e22">--</span></div>
+                <div onclick="reveal('vocab-trad', 'vocab-trad-reveal')" style="cursor:pointer; margin-top:10px;"><span id="vocab-trad-reveal" style="color:#3498db">Voir Traduction</span><span id="vocab-trad" class="hidden" style="font-size:1.3rem; color:#7f8c8d">--</span></div>
+            </div>
+            <div style="text-align:center">
+                <button onclick="nextWord()" style="padding:15px 30px; background:#3498db; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; margin-bottom:20px;">Mot suivant</button>
+            </div>
+            <details style="background:white; padding:15px; border-radius:10px;">
+                <summary style="cursor:pointer; font-weight:bold; color:#3498db">Voir la liste complète</summary>
+                <table style="width:100%; text-align:left; margin-top:10px;"><tbody id="full-vocab-list"></tbody></table>
+            </details>
+        </div>
+
+        <div id="diag1" class="content-section"></div>
+        <div id="diag2" class="content-section"></div>
+        <div id="diag3" class="content-section"></div>
+
+        <div id="write" class="content-section">
+            <div class="write-box">
+                <div class="char-grid" id="char-selector"></div>
+                <div id="write-pinyin-display"></div>
+                <div id="target-kanji"></div>
+                <div id="char-nav-info" style="font-weight:bold; color:#3498db; margin: 5px 0;"></div>
+                <div class="write-nav-btns">
+                    <button class="action-btn" style="background:#95a5a6" onclick="prevCharInWord()">⬅ Préc.</button>
+                    <button class="action-btn" style="background:#95a5a6" onclick="nextCharInWord()">Suiv. ➡</button>
+                    <button class="action-btn" style="background:#2c3e50" onclick="writer.animateCharacter()">▶ Revoir</button>
+                    <button class="action-btn" style="background:#e67e22" onclick="writer.quiz()">📝 Quiz</button>
+                </div>
+                <div class="search-area">
+                    <input type="text" id="char-input" placeholder="Ex: 字" maxlength="1" style="padding:8px; border-radius:5px; border:1px solid #ccc; width:60px;">
+                    <button class="action-btn" style="background:#7f8c8d" onclick="searchCustomChar()">Chercher</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="guide" class="content-section">
+            <div class="guide-box">
+                <div class="guide-content">
+                    <h2 style="text-align:center; color:#2c3e50;">Mode d'emploi</h2>
+                    
+                    <h3>🔤 Vocabulaire</h3>
+                    <ul>
+                        <li><span class="hl">Audio :</span> Cliquez sur le caractère chinois pour écouter la prononciation officielle.</li>
+                        <li><span class="hl">Révélation :</span> Le pinyin et le sens sont cachés pour vous aider à réviser. Cliquez sur les textes bleus pour les afficher.</li>
+                    </ul>
+
+                    <h3>💬 Dialogues</h3>
+                    <ul>
+                        <li><span class="hl">Lecture :</span> "▶ Tout lire" joue le dialogue automatiquement.</li>
+                        <li><span class="hl">Bulles (Tooltips) :</span> Survolez les caractères chinois pour voir instantanément le Pinyin et la Traduction correspondante.</li>
+                    </ul>
+
+                    <h3>✍️ Écriture</h3>
+                    <ul>
+                        <li><span class="hl">Sélection :</span> Cliquez sur un mot (ex: 什么, 时候, 几) pour voir comment le tracer.</li>
+                        <li><span class="hl">Chercher :</span> Utilisez la zone de recherche pour n'importe quel caractère, comme 去 ou 在.</li>
+                        <li><span class="hl">Quiz :</span> Écrivez le caractère de mémoire sans le modèle pour valider vos connaissances.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const vocabulaire = [
+            {char: "现在", pin: "xiànzài", trad: "maintenant"}, {char: "点", pin: "diǎn", trad: "heure"},
+            {char: "分", pin: "fēn", trad: "minute"}, {char: "中午", pin: "zhōngwǔ", trad: "midi"},
+            {char: "吃饭", pin: "chī fàn", trad: "manger"}, {char: "回", pin: "huí", trad: "revenir"},
+            {char: "我们", pin: "wǒmen", trad: "nous"}, {char: "电影", pin: "diànyǐng", trad: "film"},
+            {char: "住", pin: "zhù", trad: "habiter"}, {char: "前", pin: "qián", trad: "avant"},
+            {char: "北京", pin: "Běijīng", trad: "Pékin"}, {char: "什么", pin: "shénme", trad: "quoi / quel"}, 
+            {char: "时候", pin: "shíhou", trad: "moment"}, {char: "在", pin: "zài", trad: "être à / se trouver"}, 
+            {char: "几", pin: "jǐ", trad: "combien"}, {char: "想", pin: "xiǎng", trad: "vouloir / penser"}, 
+            {char: "能", pin: "néng", trad: "pouvoir"}, {char: "去", pin: "qù", trad: "aller"} 
+        ];
+
+        function toggleMode() {
+            document.getElementById('app-container').classList.toggle('pc-mode');
+        }
+
+        function speakText(text, rate=0.7) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-CN';
+            utterance.rate = rate;
+            utterance.pitch = 1.0; 
+            window.speechSynthesis.speak(utterance);
+        }
+
+        const diagData = {
+            diag1: [{s:"A", cn:"现在几点？", py:"Xiànzài jǐ diǎn?", fr:"Quelle heure est-il ?"}, {s:"B", cn:"现在十点十分。", py:"Xiànzài shí diǎn shí fēn.", fr:"Il est 10h10."}, {s:"A", cn:"中午几点吃饭？", py:"Zhōngwǔ jǐ diǎn chī fàn?", fr:"À quelle heure mange-t-on ?"}, {s:"B", cn:"十二点吃饭。", py:"Shí'èr diǎn chī fàn.", fr:"À 12h."}],
+            diag2: [{s:"A", cn:"爸爸什么时候回家？", py:"Bàba shénme shíhou huí jiā?", fr:"Quand papa rentre-t-il ?"}, {s:"B", cn:"下午五点。", py:"Xiàwǔ wǔ diǎn.", fr:"À 17h."}, {s:"A", cn:"我们什么时候去看电影？", py:"Wǒmen shénme shíhou qù kàn diànyǐng?", fr:"Quand va-t-on au cinéma ?"}, {s:"B", cn:"六点三十分。", py: "Liù diǎn sānshí fēn.", fr: "À 6h30."}],
+            diag3: [{s:"A", cn:"我星期一去北京。", py:"Wǒ xīngqīyī qù Běijīng.", fr:"Lundi j'irai à Pékin."}, {s:"B", cn:"你想在北京住几天？", py:"Nǐ xiǎng zài Běijīng zhù jǐ tiān?", fr:"Combien de jours restes-tu ?"}, {s:"A", cn:"住三天。", py:"Zhù sān tiān.", fr:"Trois jours."}, {s:"B", cn: "星期五前能回家吗？", py: "Xīngqīwǔ qián néng huí jiā ma?", fr: "Peux-tu rentrer avant vendredi ?"}, {s:"A", cn: "能。", py: "Néng.", fr: "Oui."}]
+        };
+
+        const charSelector = document.getElementById('char-selector');
+        vocabulaire.forEach(v => {
+            const div = document.createElement('div');
+            div.className = 'char-tile'; div.innerText = v.char;
+            div.onclick = () => startWordWriting(v.char);
+            charSelector.appendChild(div);
+        });
+
+        let currentWord = ""; let currentCharIndex = 0; let writer;
+        function startWordWriting(word) { currentWord = word; currentCharIndex = 0; updateWriter(); }
+        function searchCustomChar() { const val = document.getElementById('char-input').value; if(val){ currentWord = val; currentCharIndex = 0; updateWriter(); } }
+        function nextCharInWord() { if (currentCharIndex < currentWord.length - 1) { currentCharIndex++; updateWriter(); } }
+        function prevCharInWord() { if (currentCharIndex > 0) { currentCharIndex--; updateWriter(); } }
+        function updateWriter() {
+            const char = currentWord[currentCharIndex];
+            const entry = vocabulaire.find(v => v.char === currentWord);
+            document.getElementById('write-pinyin-display').innerText = entry ? entry.pin : "";
+            document.getElementById('char-nav-info').innerText = currentWord.length > 1 ? `${currentWord} (${currentCharIndex+1}/${currentWord.length})` : currentWord;
+            document.getElementById('target-kanji').innerHTML = "";
+            writer = HanziWriter.create('target-kanji', char, { width: 180, height: 180, padding: 5, showOutline: true, radialGuide: true, strokeColor: '#3498db' });
+            writer.animateCharacter();
+        }
+
+        async function playAll(id) {
+            const r = document.getElementById('rate-'+id).value;
+            for (let line of diagData[id]) {
+                speakText(line.cn, r);
+                await new Promise(res => setTimeout(res, (line.cn.length * 600)/r + 800));
+            }
+        }
+
+        function renderDialogue(id) {
+            const container = document.getElementById(id);
+            if(container.innerHTML !== "") return;
+            let html = `<div class="controls" style="margin-bottom:15px;"><button class="action-btn" style="background:#34495e" onclick="toggleGrp('${id}','py-text')">Pinyin</button><button class="action-btn" style="background:#34495e" onclick="toggleGrp('${id}','fr-text')">Trad</button><button class="action-btn" style="background:#27ae60" onclick="playAll('${id}')">▶ Tout lire</button><br><label style="font-size:0.8rem">Vitesse: <input type="range" id="rate-${id}" min="0.3" max="1" step="0.1" value="0.7"></label></div><div class="dialogue-box">`;
+            diagData[id].forEach(d => {
+                html += `<div class="sentence" style="margin:10px 0; border-bottom:1px solid #eee; padding-bottom:5px; text-align:left;"><span class="speaker" style="color:#7f8c8d; font-weight:bold; cursor:pointer;" onclick="speakText('${d.cn}')">${d.s}: </span><span class="cn-text" data-tooltip="${d.py}&#10;${d.fr}" onclick="speakText('${d.cn}')">${d.cn}</span><div class="py-text hidden" style="color:#7f8c8d; font-size:0.9rem">${d.py}</div><div class="fr-text hidden" style="color:#95a5a6; font-size:0.8rem">${d.fr}</div></div>`;
+            });
+            container.innerHTML = html + `</div>`;
+        }
+
+        function showTab(t) {
+            document.querySelectorAll('.content-section, .tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(t).classList.add('active');
+            document.getElementById('btn-'+t).classList.add('active');
+            if(t.startsWith('diag')) renderDialogue(t);
+            if(t==='write' && !writer) startWordWriting('现在');
+        }
+
+        function toggleGrp(tid, c) { document.querySelectorAll(`#${tid} .${c}`).forEach(el => el.classList.toggle('hidden')); }
+        function reveal(id, rid) { document.getElementById(id).classList.toggle('hidden'); document.getElementById(rid).classList.toggle('hidden'); }
+        function nextWord() {
+            const w = vocabulaire[Math.floor(Math.random() * vocabulaire.length)];
+            document.getElementById('vocab-cn').innerText = w.char;
+            document.getElementById('vocab-py').innerText = w.pin; document.getElementById('vocab-trad').innerText = w.trad;
+            document.getElementById('vocab-py').classList.add('hidden'); document.getElementById('vocab-trad').classList.add('hidden');
+            document.getElementById('vocab-py-reveal').classList.remove('hidden'); document.getElementById('vocab-trad-reveal').classList.remove('hidden');
+        }
+        
+        const listBody = document.getElementById('full-vocab-list');
+        vocabulaire.forEach(v => { listBody.innerHTML += `<tr onclick="speakText('${v.char}')" style="border-bottom:1px solid #eee; cursor:pointer;"><td style="padding:8px"><strong>${v.char}</strong></td><td>${v.pin}</td><td>${v.trad}</td></tr>`; });
+        nextWord();
+    </script>
+</body>
+</html>
