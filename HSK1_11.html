@@ -35,7 +35,7 @@
         .char-tile:hover { background: #e67e22; color: white; border-color: #e67e22; }
         
         #write-pinyin-display { font-size: 1.5rem; color: #e67e22; font-weight: bold; margin-bottom: 5px; min-height: 1.8rem; }
-        #target-kanji { margin: 0 auto 10px auto; background: #fff; border: 2px solid #3498db; display: inline-block; border-radius: 10px; }
+        #target-kanji { margin: 0 auto 10px auto; background: #fff; border: 2px solid #3498db; display: inline-block; border-radius: 10px; min-width: 180px; min-height: 180px; }
         .write-nav-btns { margin-top: 10px; display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
         .search-area { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: center; gap: 5px; }
         
@@ -97,8 +97,8 @@
                 <div class="write-nav-btns">
                     <button class="action-btn" style="background:#95a5a6" onclick="prevCharInWord()">⬅ Préc.</button>
                     <button class="action-btn" style="background:#95a5a6" onclick="nextCharInWord()">Suiv. ➡</button>
-                    <button class="action-btn" style="background:#2c3e50" onclick="writer.animateCharacter()">▶ Revoir</button>
-                    <button class="action-btn" style="background:#e67e22" onclick="writer.quiz()">📝 Quiz</button>
+                    <button class="action-btn" style="background:#2c3e50" onclick="if(writer) writer.animateCharacter()">▶ Revoir</button>
+                    <button class="action-btn" style="background:#e67e22" onclick="if(writer) writer.quiz()">📝 Quiz</button>
                 </div>
                 <div class="search-area">
                     <input type="text" id="char-input" placeholder="Ex: 字" maxlength="1" style="padding:8px; border-radius:5px; border:1px solid #ccc; width:60px;">
@@ -180,14 +180,32 @@
         function searchCustomChar() { const val = document.getElementById('char-input').value; if(val){ currentWord = val; currentCharIndex = 0; updateWriter(); } }
         function nextCharInWord() { if (currentCharIndex < currentWord.length - 1) { currentCharIndex++; updateWriter(); } }
         function prevCharInWord() { if (currentCharIndex > 0) { currentCharIndex--; updateWriter(); } }
+        
         function updateWriter() {
             const char = currentWord[currentCharIndex];
+            const target = document.getElementById('target-kanji');
+            if (!char || !target) return;
+
+            target.innerHTML = ""; // Nettoyer le canvas précédent
+            
             const entry = vocabulaire.find(v => v.char === currentWord);
             document.getElementById('write-pinyin-display').innerText = entry ? entry.pin : "";
             document.getElementById('char-nav-info').innerText = currentWord.length > 1 ? `${currentWord} (${currentCharIndex+1}/${currentWord.length})` : currentWord;
-            document.getElementById('target-kanji').innerHTML = "";
-            writer = HanziWriter.create('target-kanji', char, { width: 180, height: 180, padding: 5, showOutline: true, radialGuide: true, strokeColor: '#3498db' });
-            writer.animateCharacter();
+            
+            // Sécurité pour s'assurer que HanziWriter est bien chargé (CDN)
+            if (typeof HanziWriter !== 'undefined') {
+                writer = HanziWriter.create('target-kanji', char, { 
+                    width: 180, 
+                    height: 180, 
+                    padding: 5, 
+                    showOutline: true, 
+                    radialGuide: true, 
+                    strokeColor: '#3498db' 
+                });
+                writer.animateCharacter();
+            } else {
+                target.innerHTML = "<p style='font-size:0.8rem; color:red;'>Erreur de chargement du module d'écriture. Vérifiez votre connexion.</p>";
+            }
         }
 
         async function playAll(id) {
@@ -213,7 +231,10 @@
             document.getElementById(t).classList.add('active');
             document.getElementById('btn-'+t).classList.add('active');
             if(t.startsWith('diag')) renderDialogue(t);
-            if(t==='write' && !writer) startWordWriting('现在');
+            if(t==='write') {
+                // Délai pour s'assurer que le container est visible avant l'init du HanziWriter
+                setTimeout(() => { if(!currentWord) startWordWriting('现在'); else updateWriter(); }, 50);
+            }
         }
 
         function toggleGrp(tid, c) { document.querySelectorAll(`#${tid} .${c}`).forEach(el => el.classList.toggle('hidden')); }
