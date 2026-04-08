@@ -2,12 +2,13 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Chinois HSK1 - Leçon <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@latest/dist/hanzi-writer.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinois HSK1 - Leçon 11</title>
+    <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
     <style>
         /* Base Styles */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; flex-direction: column; align-items: center; padding: 20px; color: #2c3e50; transition: all 0.3s ease; }
         
-        /* Container App Mode Control */
         #app-container { width: 400px; background: #fff; border-radius: 30px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 8px solid #333; transition: all 0.3s ease; }
         #app-container.pc-mode { width: 95%; max-width: 1200px; border-radius: 15px; border: none; box-shadow: none; background: transparent; }
 
@@ -29,7 +30,7 @@
         .card, .dialogue-box, .write-box, .guide-box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
         
         /* Writing Styles */
-        .char-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; background: #f9f9f9; padding: 15px; border-radius: 10px; border: 1px solid #eee; }
+        .char-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; background: #f9f9f9; padding: 15px; border-radius: 10px; border: 1px solid #eee; max-height: 200px; overflow-y: auto; }
         .char-tile { padding: 8px 12px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid #ddd; border-radius: 5px; font-size: 1.1rem; cursor: pointer; transition: 0.2s; }
         .char-tile:hover { background: #e67e22; color: white; border-color: #e67e22; }
         
@@ -45,11 +46,6 @@
 
         .hidden { display: none !important; }
         .action-btn { padding: 8px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; margin: 2px; }
-        
-        /* Guide Styles */
-        .guide-content { text-align: left; line-height: 1.6; font-size: 0.95rem; }
-        .guide-content h3 { color: #3498db; border-bottom: 2px solid #3498db; padding-bottom: 5px; margin-top: 25px; }
-        .hl { font-weight: bold; color: #2c3e50; }
     </style>
 </head>
 <body>
@@ -108,27 +104,9 @@
 
         <div id="guide" class="content-section">
             <div class="guide-box">
-                <div class="guide-content">
-                    <h2 style="text-align:center; color:#2c3e50;">Mode d'emploi</h2>
-                    
-                    <h3>🔤 Vocabulaire</h3>
-                    <ul>
-                        <li><span class="hl">Audio :</span> Cliquez sur le caractère chinois pour écouter la prononciation officielle.</li>
-                        <li><span class="hl">Révélation :</span> Le pinyin et le sens sont cachés pour vous aider à réviser. Cliquez sur les textes bleus pour les afficher.</li>
-                    </ul>
-
-                    <h3>💬 Dialogues</h3>
-                    <ul>
-                        <li><span class="hl">Lecture :</span> "▶ Tout lire" joue le dialogue automatiquement.</li>
-                        <li><span class="hl">Bulles (Tooltips) :</span> Survolez les caractères chinois pour voir instantanément le Pinyin et la Traduction correspondante.</li>
-                    </ul>
-
-                    <h3>✍️ Écriture</h3>
-                    <ul>
-                        <li><span class="hl">Sélection :</span> Cliquez sur un mot (ex: 什么, 时候, 几) pour voir comment le tracer.</li>
-                        <li><span class="hl">Chercher :</span> Utilisez la zone de recherche pour n'importe quel caractère, comme 去 ou 在.</li>
-                        <li><span class="hl">Quiz :</span> Écrivez le caractère de mémoire sans le modèle pour valider vos connaissances.</li>
-                    </ul>
+                <div class="guide-content" style="text-align:left;">
+                    <h2 style="text-align:center;">Guide</h2>
+                    <p>Cliquez sur <strong>✍️ Écriture</strong> puis sélectionnez un mot dans la grille grise pour voir l'animation du tracé.</p>
                 </div>
             </div>
         </div>
@@ -147,93 +125,107 @@
             {char: "能", pin: "néng", trad: "pouvoir"}, {char: "去", pin: "qù", trad: "aller"} 
         ];
 
-        function toggleMode() {
-            document.getElementById('app-container').classList.toggle('pc-mode');
-        }
-
-        function speakText(text, rate=0.7) {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'zh-CN';
-            utterance.rate = rate;
-            utterance.pitch = 1.0; 
-            window.speechSynthesis.speak(utterance);
-        }
-
         const diagData = {
             diag1: [{s:"A", cn:"现在几点？", py:"Xiànzài jǐ diǎn?", fr:"Quelle heure est-il ?"}, {s:"B", cn:"现在十点十分。", py:"Xiànzài shí diǎn shí fēn.", fr:"Il est 10h10."}, {s:"A", cn:"中午几点吃饭？", py:"Zhōngwǔ jǐ diǎn chī fàn?", fr:"À quelle heure mange-t-on ?"}, {s:"B", cn:"十二点吃饭。", py:"Shí'èr diǎn chī fàn.", fr:"À 12h."}],
             diag2: [{s:"A", cn:"爸爸什么时候回家？", py:"Bàba shénme shíhou huí jiā?", fr:"Quand papa rentre-t-il ?"}, {s:"B", cn:"下午五点。", py:"Xiàwǔ wǔ diǎn.", fr:"À 17h."}, {s:"A", cn:"我们什么时候去看电影？", py:"Wǒmen shénme shíhou qù kàn diànyǐng?", fr:"Quand va-t-on au cinéma ?"}, {s:"B", cn:"六点三十分。", py: "Liù diǎn sānshí fēn.", fr: "À 6h30."}],
             diag3: [{s:"A", cn:"我星期一去北京。", py:"Wǒ xīngqīyī qù Běijīng.", fr:"Lundi j'irai à Pékin."}, {s:"B", cn:"你想在北京住几天？", py:"Nǐ xiǎng zài Běijīng zhù jǐ tiān?", fr:"Combien de jours restes-tu ?"}, {s:"A", cn:"住三天。", py:"Zhù sān tiān.", fr:"Trois jours."}, {s:"B", cn: "星期五前能回家吗？", py: "Xīngqīwǔ qián néng huí jiā ma?", fr: "Peux-tu rentrer avant vendredi ?"}, {s:"A", cn: "能。", py: "Néng.", fr: "Oui."}]
         };
 
-        const charSelector = document.getElementById('char-selector');
-        vocabulaire.forEach(v => {
-            const div = document.createElement('div');
-            div.className = 'char-tile'; div.innerText = v.char;
-            div.onclick = () => startWordWriting(v.char);
-            charSelector.appendChild(div);
-        });
+        let currentWord = ""; 
+        let currentCharIndex = 0; 
+        let writer = null;
 
-        let currentWord = ""; let currentCharIndex = 0; let writer;
-        function startWordWriting(word) { currentWord = word; currentCharIndex = 0; updateWriter(); }
-        function searchCustomChar() { const val = document.getElementById('char-input').value; if(val){ currentWord = val; currentCharIndex = 0; updateWriter(); } }
-        function nextCharInWord() { if (currentCharIndex < currentWord.length - 1) { currentCharIndex++; updateWriter(); } }
-        function prevCharInWord() { if (currentCharIndex > 0) { currentCharIndex--; updateWriter(); } }
-        
+        window.onload = function() {
+            initCharSelector();
+            initFullVocab();
+            nextWord();
+            if (typeof HanziWriter !== 'undefined') {
+                startWordWriting('现在');
+            }
+        };
+
+        function initCharSelector() {
+            const selector = document.getElementById('char-selector');
+            vocabulaire.forEach(v => {
+                const div = document.createElement('div');
+                div.className = 'char-tile'; div.innerText = v.char;
+                div.onclick = () => startWordWriting(v.char);
+                selector.appendChild(div);
+            });
+        }
+
+        function initFullVocab() {
+            const listBody = document.getElementById('full-vocab-list');
+            vocabulaire.forEach(v => { 
+                listBody.innerHTML += `<tr onclick="speakText('${v.char}')" style="border-bottom:1px solid #eee; cursor:pointer;"><td style="padding:8px"><strong>${v.char}</strong></td><td>${v.pin}</td><td>${v.trad}</td></tr>`; 
+            });
+        }
+
+        function toggleMode() { document.getElementById('app-container').classList.toggle('pc-mode'); }
+
+        function speakText(text, rate=0.7) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-CN';
+            utterance.rate = rate;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function startWordWriting(word) { 
+            currentWord = word; 
+            currentCharIndex = 0; 
+            updateWriter(); 
+        }
+
         function updateWriter() {
             const char = currentWord[currentCharIndex];
             const target = document.getElementById('target-kanji');
-            if (!char || !target) return;
+            target.innerHTML = ""; 
 
-            target.innerHTML = ""; // Nettoyer le canvas précédent
-            
             const entry = vocabulaire.find(v => v.char === currentWord);
             document.getElementById('write-pinyin-display').innerText = entry ? entry.pin : "";
             document.getElementById('char-nav-info').innerText = currentWord.length > 1 ? `${currentWord} (${currentCharIndex+1}/${currentWord.length})` : currentWord;
-            
-            // Sécurité pour s'assurer que HanziWriter est bien chargé (CDN)
-            if (typeof HanziWriter !== 'undefined') {
-                writer = HanziWriter.create('target-kanji', char, { 
-                    width: 180, 
-                    height: 180, 
-                    padding: 5, 
-                    showOutline: true, 
-                    radialGuide: true, 
-                    strokeColor: '#3498db' 
-                });
-                writer.animateCharacter();
-            } else {
-                target.innerHTML = "<p style='font-size:0.8rem; color:red;'>Erreur de chargement du module d'écriture. Vérifiez votre connexion.</p>";
-            }
-        }
 
-        async function playAll(id) {
-            const r = document.getElementById('rate-'+id).value;
-            for (let line of diagData[id]) {
-                speakText(line.cn, r);
-                await new Promise(res => setTimeout(res, (line.cn.length * 600)/r + 800));
-            }
-        }
-
-        function renderDialogue(id) {
-            const container = document.getElementById(id);
-            if(container.innerHTML !== "") return;
-            let html = `<div class="controls" style="margin-bottom:15px;"><button class="action-btn" style="background:#34495e" onclick="toggleGrp('${id}','py-text')">Pinyin</button><button class="action-btn" style="background:#34495e" onclick="toggleGrp('${id}','fr-text')">Trad</button><button class="action-btn" style="background:#27ae60" onclick="playAll('${id}')">▶ Tout lire</button><br><label style="font-size:0.8rem">Vitesse: <input type="range" id="rate-${id}" min="0.3" max="1" step="0.1" value="0.7"></label></div><div class="dialogue-box">`;
-            diagData[id].forEach(d => {
-                html += `<div class="sentence" style="margin:10px 0; border-bottom:1px solid #eee; padding-bottom:5px; text-align:left;"><span class="speaker" style="color:#7f8c8d; font-weight:bold; cursor:pointer;" onclick="speakText('${d.cn}')">${d.s}: </span><span class="cn-text" data-tooltip="${d.py}&#10;${d.fr}" onclick="speakText('${d.cn}')">${d.cn}</span><div class="py-text hidden" style="color:#7f8c8d; font-size:0.9rem">${d.py}</div><div class="fr-text hidden" style="color:#95a5a6; font-size:0.8rem">${d.fr}</div></div>`;
+            // URL mise à jour basée sur les standards jsDelivr pour HanziWriter
+            writer = HanziWriter.create('target-kanji', char, {
+                width: 180,
+                height: 180,
+                padding: 5,
+                showOutline: true,
+                strokeColor: '#3498db',
+                charDataLoader: (char, onComplete) => {
+                    fetch(`https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/${char}.json`)
+                        .then(res => res.json())
+                        .then(onComplete)
+                        .catch(err => console.error("Erreur de chargement du caractère:", err));
+                }
             });
-            container.innerHTML = html + `</div>`;
+            writer.animateCharacter();
         }
+
+        function searchCustomChar() { 
+            const val = document.getElementById('char-input').value; 
+            if(val){ currentWord = val; currentCharIndex = 0; updateWriter(); } 
+        }
+
+        function nextCharInWord() { if (currentCharIndex < currentWord.length - 1) { currentCharIndex++; updateWriter(); } }
+        function prevCharInWord() { if (currentCharIndex > 0) { currentCharIndex--; updateWriter(); } }
 
         function showTab(t) {
             document.querySelectorAll('.content-section, .tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(t).classList.add('active');
             document.getElementById('btn-'+t).classList.add('active');
             if(t.startsWith('diag')) renderDialogue(t);
-            if(t==='write') {
-                // Délai pour s'assurer que le container est visible avant l'init du HanziWriter
-                setTimeout(() => { if(!currentWord) startWordWriting('现在'); else updateWriter(); }, 50);
-            }
+        }
+
+        function renderDialogue(id) {
+            const container = document.getElementById(id);
+            if(container.innerHTML !== "") return;
+            let html = `<div class="controls" style="margin-bottom:15px;"><button class="action-btn" style="background:#34495e" onclick="toggleGrp('${id}','py-text')">Pinyin</button><button class="action-btn" style="background:#34495e" onclick="toggleGrp('${id}','fr-text')">Trad</button><br><label style="font-size:0.8rem">Vitesse: <input type="range" id="rate-${id}" min="0.3" max="1" step="0.1" value="0.7"></label></div><div class="dialogue-box">`;
+            diagData[id].forEach(d => {
+                html += `<div class="sentence" style="margin:10px 0; text-align:left;"><span class="speaker" style="color:#7f8c8d; font-weight:bold;">${d.s}: </span><span class="cn-text" data-tooltip="${d.py}&#10;${d.fr}" onclick="speakText('${d.cn}')">${d.cn}</span><div class="py-text hidden">${d.py}</div><div class="fr-text hidden">${d.fr}</div></div>`;
+            });
+            container.innerHTML = html + `</div>`;
         }
 
         function toggleGrp(tid, c) { document.querySelectorAll(`#${tid} .${c}`).forEach(el => el.classList.toggle('hidden')); }
@@ -245,10 +237,6 @@
             document.getElementById('vocab-py').classList.add('hidden'); document.getElementById('vocab-trad').classList.add('hidden');
             document.getElementById('vocab-py-reveal').classList.remove('hidden'); document.getElementById('vocab-trad-reveal').classList.remove('hidden');
         }
-        
-        const listBody = document.getElementById('full-vocab-list');
-        vocabulaire.forEach(v => { listBody.innerHTML += `<tr onclick="speakText('${v.char}')" style="border-bottom:1px solid #eee; cursor:pointer;"><td style="padding:8px"><strong>${v.char}</strong></td><td>${v.pin}</td><td>${v.trad}</td></tr>`; });
-        nextWord();
     </script>
 </body>
 </html>
