@@ -31,7 +31,7 @@
         .save-btn { background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
         
         .action-btn { padding: 8px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; margin: 2px; }
-        #target-kanji { border: 2px solid #3498db; border-radius: 10px; margin: 10px 0; background: white; }
+        #target-kanji { border: 2px solid #3498db; border-radius: 10px; margin: 10px 0; background: white; min-height: 200px; display: inline-block; }
 
         .guide-box { text-align: left; line-height: 1.6; }
         .guide-box h3 { color: #3498db; margin-top: 20px; border-bottom: 1px solid #eee; }
@@ -66,15 +66,15 @@
                 <button class="action-btn" style="background:#34495e" onclick="toggleVocabVisibility('vocab-trad')">Trad</button>
             </div>
             <div class="card">
-                <span id="vocab-cn" style="font-size:4rem; cursor:pointer" onclick="speak(this.innerText)">好</span>
+                <span id="vocab-cn" style="font-size:4rem; cursor:pointer" onclick="speak(this.innerText)">上课</span>
                 <div>
-                    <p id="vocab-py" class="hidden" style="font-size:1.5rem; color:#e67e22; margin: 5px 0;">hǎo</p>
-                    <p id="vocab-trad" class="hidden" style="font-size:1.2rem; color:#7f8c8d; margin: 5px 0;">bien, bon</p>
+                    <p id="vocab-py" class="hidden" style="font-size:1.5rem; color:#e67e22; margin: 5px 0;">shàngkè</p>
+                    <p id="vocab-trad" class="hidden" style="font-size:1.2rem; color:#7f8c8d; margin: 5px 0;">Le cours commence</p>
                 </div>
                 <button class="action-btn" style="background:#3498db; padding: 12px 25px; margin-top: 10px;" onclick="nextWord()">Mot suivant</button>
             </div>
 
-            <details style="background:white; padding:15px; border-radius:15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+            <details style="background:white; padding:15px; border-radius:15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);" open="">
                 <summary style="cursor:pointer; font-weight:bold; color:#3498db">📖 Voir la liste complète</summary>
                 <table class="vocab-table">
                     <tbody id="full-vocab-list"><tr><td><strong>你</strong></td><td>nǐ</td><td>tu, toi</td></tr><tr><td><strong>好</strong></td><td>hǎo</td><td>bien, bon</td></tr><tr><td><strong>您</strong></td><td>nín</td><td>vous (singulier)</td></tr><tr><td><strong>你们</strong></td><td>nǐmen</td><td>vous (pluriel)</td></tr><tr><td><strong>对不起</strong></td><td>duìbuqǐ</td><td>être désolé</td></tr><tr><td><strong>没关系</strong></td><td>méiguānxi</td><td>ce n'est pas grave</td></tr><tr><td><strong>上课</strong></td><td>shàngkè</td><td>Le cours commence</td></tr><tr><td><strong>下课</strong></td><td>xiàkè</td><td>Le cours est fini</td></tr><tr><td><strong>现在休息</strong></td><td>xiànzài xiūxi</td><td>Faisons une pause</td></tr><tr><td><strong>看黑板</strong></td><td>kàn hēibǎn</td><td>Regardez le tableau</td></tr><tr><td><strong>跟我读</strong></td><td>gēn wǒ dú</td><td>Lisez après moi</td></tr></tbody>
@@ -92,13 +92,16 @@
                 <button class="action-btn" style="background:#34495e" onclick="toggleGrp('diag2','py-text')">Pinyin</button>
                 <button class="action-btn" style="background:#34495e" onclick="toggleGrp('diag2','fr-text')">Trad</button>
             </div><audio controls="" class="diag-audio-player"><source src="01-2.mp3" type="audio/mpeg"></audio><div class="dialogue-box"><div style="text-align:left; margin-bottom:12px; border-bottom:1px dotted #ccc; padding-bottom:8px;"><span style="color:#3498db; font-weight:bold; cursor:pointer;" onclick="speak('您好！')">A: </span><span style="font-size:1.3rem; cursor:pointer;" onclick="speak('您好！')">您好！</span><br><div class="py-text hidden" style="color:#e67e22; font-size:0.9rem">Nín hǎo!</div><div class="fr-text hidden" style="color:#7f8c8d; font-size:0.8rem">Bonjour (formel) !</div></div><div style="text-align:left; margin-bottom:12px; border-bottom:1px dotted #ccc; padding-bottom:8px;"><span style="color:#3498db; font-weight:bold; cursor:pointer;" onclick="speak('你们好！')">B: </span><span style="font-size:1.3rem; cursor:pointer;" onclick="speak('你们好！')">你们好！</span><br><div class="py-text hidden" style="color:#e67e22; font-size:0.9rem">Nǐmen hǎo!</div><div class="fr-text hidden" style="color:#7f8c8d; font-size:0.8rem">Bonjour à vous !</div></div></div></div>
-        <div id="diag3" class="content-section"></div>
+        <div id="diag3" class="content-section"><div class="controls" style="margin-bottom:15px; text-align:center;">
+                <button class="action-btn" style="background:#34495e" onclick="toggleGrp('diag3','py-text')">Pinyin</button>
+                <button class="action-btn" style="background:#34495e" onclick="toggleGrp('diag3','fr-text')">Trad</button>
+            </div><audio controls="" class="diag-audio-player"><source src="01-3.mp3" type="audio/mpeg"></audio><div class="dialogue-box"><div style="text-align:left; margin-bottom:12px; border-bottom:1px dotted #ccc; padding-bottom:8px;"><span style="color:#3498db; font-weight:bold; cursor:pointer;" onclick="speak('对不起！')">A: </span><span style="font-size:1.3rem; cursor:pointer;" onclick="speak('对不起！')">对不起！</span><br><div class="py-text hidden" style="color:#e67e22; font-size:0.9rem">Duìbuqǐ!</div><div class="fr-text hidden" style="color:#7f8c8d; font-size:0.8rem">Désolé !</div></div><div style="text-align:left; margin-bottom:12px; border-bottom:1px dotted #ccc; padding-bottom:8px;"><span style="color:#3498db; font-weight:bold; cursor:pointer;" onclick="speak('没关系！')">B: </span><span style="font-size:1.3rem; cursor:pointer;" onclick="speak('没关系！')">没关系！</span><br><div class="py-text hidden" style="color:#e67e22; font-size:0.9rem">Méi guānxi!</div><div class="fr-text hidden" style="color:#7f8c8d; font-size:0.8rem">Ce n'est pas grave / De rien !</div></div></div></div>
 
         <div id="write" class="content-section">
             <div class="write-box">
                 <div id="char-list" class="char-selector"><button class="char-btn">你</button><button class="char-btn">好</button><button class="char-btn">您</button><button class="char-btn">们</button><button class="char-btn">对</button><button class="char-btn">不</button><button class="char-btn">起</button><button class="char-btn">没</button><button class="char-btn">关</button><button class="char-btn">系</button><button class="char-btn">上</button><button class="char-btn">课</button><button class="char-btn">下</button><button class="char-btn">现</button><button class="char-btn">在</button><button class="char-btn">休</button><button class="char-btn">息</button><button class="char-btn">看</button><button class="char-btn">黑</button><button class="char-btn">板</button><button class="char-btn">跟</button><button class="char-btn">我</button><button class="char-btn">读</button></div>
                 <div id="target-kanji"></div>
-                <h2 id="write-info" style="color:#3498db"></h2>
+                <h2 id="write-info" style="color:#3498db">你</h2>
                 <button class="action-btn" style="background:#2c3e50" onclick="writer.animateCharacter()">▶ Tracer</button>
                 <button class="action-btn" style="background:#e67e22" onclick="writer.quiz()">📝 Quiz</button>
                 <div id="search-write" style="margin-top:15px; border-top: 1px solid #eee; padding-top: 15px;">
@@ -109,18 +112,7 @@
         </div>
 
         <div id="guide" class="content-section">
-            <div class="guide-box">
-                    <h2>📖 Guide d'Utilisation</h2>
-                    <p>Ce fichier contient votre session d'apprentissage personnalisée.</p>
-                    <h3>🔤 Vocabulaire</h3>
-                    <p>Utilisez <b>"Mot suivant"</b>. Cliquez sur le caractère pour entendre le son.</p>
-                    <h3>💬 Dialogues</h3>
-                    <p>Cliquez sur les phrases pour le son. Si un lecteur est présent en haut, cliquez sur Play pour l'audio global.</p>
-                    <h3>✍️ Écriture</h3>
-                    <p>Sélectionnez un caractère ou tapez-en un. Utilisez <b>Tracer</b> ou <b>Quiz</b>.</p>
-                    <h3>📱 Mode d'affichage</h3>
-                    <p>Adaptez l'interface avec le bouton <b>Mode</b>.</p>
-                </div>
+            <div class="guide-box"><h2>📖 Guide d'Utilisation</h2><p>Fichier d'apprentissage personnalisé.</p><h3>🔤 Vocabulaire</h3><p>Utilisez <b>"Mot suivant"</b>. Cliquez pour le son.</p><h3>💬 Dialogues</h3><p>Cliquez sur les phrases. Utilisez le lecteur audio en haut pour l'audio global.</p><h3>✍️ Écriture</h3><p>Sélectionnez un caractère. Utilisez <b>Tracer</b> ou <b>Quiz</b>.</p></div>
         </div>
     </div>
     <script>
@@ -180,22 +172,20 @@
                 alert("Enregistré !");
                 refreshVocabList();
                 nextWord();
-            } catch(e) { alert("Erreur JSON : vérifiez les virgules et les guillemets."); }
+            } catch(e) { alert("Erreur JSON"); }
         }
 
         function renderDiag(id) {
             const container = document.getElementById(id);
+            if (!container) return;
             const data = diags[id] || [];
             let html = `<div class="controls" style="margin-bottom:15px; text-align:center;">
                 <button class="action-btn" style="background:#34495e" onclick="toggleGrp('${id}','py-text')">Pinyin</button>
                 <button class="action-btn" style="background:#34495e" onclick="toggleGrp('${id}','fr-text')">Trad</button>
             </div>`;
-            
-            // Ajout du lecteur audio si spécifié dans le JSON
             if (data.length > 0 && data[0].audio) {
                 html += `<audio controls class="diag-audio-player"><source src="${data[0].audio}" type="audio/mpeg"></audio>`;
             }
-
             html += `<div class="dialogue-box">`;
             data.forEach(d => {
                 html += `<div style="text-align:left; margin-bottom:12px; border-bottom:1px dotted #ccc; padding-bottom:8px;"><span style="color:#3498db; font-weight:bold; cursor:pointer;" onclick="speak('${d.cn}')">${d.s}: </span><span style="font-size:1.3rem; cursor:pointer;" onclick="speak('${d.cn}')">${d.cn}</span><br><div class="py-text hidden" style="color:#e67e22; font-size:0.9rem">${d.py}</div><div class="fr-text hidden" style="color:#7f8c8d; font-size:0.8rem">${d.fr}</div></div>`;
@@ -246,24 +236,19 @@
             scriptContent = scriptContent.replace(/const defaultDiags = \{.*?\};/, `const defaultDiags = ${JSON.stringify(diags)};`);
 
             const cleanContainer = document.getElementById('app-container').cloneNode(true);
+            
+            // On nettoie les outils d'édition SANS supprimer l'élément target-kanji
             cleanContainer.querySelector('#edit-vocab-area')?.remove();
             cleanContainer.querySelectorAll('.editor-area').forEach(el => el.remove());
             cleanContainer.querySelector('#guide-edit-info')?.remove();
+            
+            // On vide le contenu visuel généré dynamiquement mais on garde les IDs
+            const targetKanji = cleanContainer.querySelector('#target-kanji');
+            if (targetKanji) targetKanji.innerHTML = "";
 
             const guideSection = cleanContainer.querySelector('#guide .guide-box');
             if (guideSection) {
-                guideSection.innerHTML = `
-                    <h2>📖 Guide d'Utilisation</h2>
-                    <p>Ce fichier contient votre session d'apprentissage personnalisée.</p>
-                    <h3>🔤 Vocabulaire</h3>
-                    <p>Utilisez <b>"Mot suivant"</b>. Cliquez sur le caractère pour entendre le son.</p>
-                    <h3>💬 Dialogues</h3>
-                    <p>Cliquez sur les phrases pour le son. Si un lecteur est présent en haut, cliquez sur Play pour l'audio global.</p>
-                    <h3>✍️ Écriture</h3>
-                    <p>Sélectionnez un caractère ou tapez-en un. Utilisez <b>Tracer</b> ou <b>Quiz</b>.</p>
-                    <h3>📱 Mode d'affichage</h3>
-                    <p>Adaptez l'interface avec le bouton <b>Mode</b>.</p>
-                `;
+                guideSection.innerHTML = `<h2>📖 Guide d'Utilisation</h2><p>Fichier d'apprentissage personnalisé.</p><h3>🔤 Vocabulaire</h3><p>Utilisez <b>"Mot suivant"</b>. Cliquez pour le son.</p><h3>💬 Dialogues</h3><p>Cliquez sur les phrases. Utilisez le lecteur audio en haut pour l'audio global.</p><h3>✍️ Écriture</h3><p>Sélectionnez un caractère. Utilisez <b>Tracer</b> ou <b>Quiz</b>.</p>`;
             }
 
             const finalHTML = `<!DOCTYPE html>
